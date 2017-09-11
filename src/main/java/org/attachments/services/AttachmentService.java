@@ -3,13 +3,17 @@ package org.attachments.services;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.attachments.converters.AttachmentConverter.entityToVo;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.attachments.models.Attachment;
 import org.attachments.repositories.FileRepository;
+import org.attachments.vos.AttachmentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,10 +24,10 @@ public class AttachmentService {
 	@Autowired
 	FileRepository repo;
 	
-	public List<Attachment> getAttachments() {
-		List<Attachment> list = repo.findAll();
-		for (Attachment attachment : list) {
-			attachment.setFile(null);
+	public List<AttachmentVO> getAttachments() {
+		List<AttachmentVO> list = new ArrayList<>();
+		for (Attachment attachment : repo.findAll()) {
+			list.add(entityToVo(attachment));
 		}
 		return list;
 	}

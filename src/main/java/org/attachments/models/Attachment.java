@@ -20,7 +20,8 @@ public class Attachment {
 	
 	private double size;
 	
-	private String meanfulName;
+	private String meaningfulName;
+	
 	
 	public Date getUploadDate() {
 		return uploadDate;
@@ -30,12 +31,12 @@ public class Attachment {
 		this.uploadDate = uploadDate;
 	}
 
-	public String getMeanfulName() {
-		return meanfulName;
+	public String getMeaningfulName() {
+		return meaningfulName;
 	}
 
-	public void setMeanfulName(String meanfulName) {
-		this.meanfulName = meanfulName;
+	public void setMeaningfulName(String meaningfulName) {
+		this.meaningfulName = meaningfulName;
 	}
 
 	public String getId() {

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.attachments.models.Attachment;
 import org.attachments.services.AttachmentService;
+import org.attachments.vos.AttachmentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,7 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/attachments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Attachment> getAttachments() {
+	public List<AttachmentVO> getAttachments() {
 		return attachmentService.getAttachments();
 	}
 
