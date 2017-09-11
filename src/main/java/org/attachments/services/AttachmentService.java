@@ -28,7 +28,7 @@ public class AttachmentService {
 		return list;
 	}
 	
-	public void uploadFile(MultipartFile file, String meanfulName) throws Exception {
+	public void uploadFile(MultipartFile file, Attachment attachment) throws Exception {
 
 		if (file != null) {
 
@@ -36,11 +36,9 @@ public class AttachmentService {
 				throw new Exception("Fichier existe déja !");
 			} else {
 
-				Attachment attachment = new Attachment();
 				attachment.setFile(file.getBytes());
 				attachment.setName(file.getOriginalFilename());
 				attachment.setSize(file.getSize());
-				attachment.setMeanfulName(meanfulName);
 				repo.save(attachment);
 			}
 

@@ -1,7 +1,11 @@
 package org.attachments.models;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+
 @Document
 public class Attachment {
 	
@@ -10,12 +14,22 @@ public class Attachment {
 	
 	private String name;
 	
+	private Date uploadDate;
+	
 	private byte[] file;
 	
 	private double size;
 	
 	private String meanfulName;
 	
+	public Date getUploadDate() {
+		return uploadDate;
+	}
+
+	public void setUploadDate(Date uploadDate) {
+		this.uploadDate = uploadDate;
+	}
+
 	public String getMeanfulName() {
 		return meanfulName;
 	}

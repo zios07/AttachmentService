@@ -23,8 +23,8 @@ public class FileUploadController {
 	AttachmentService attachmentService;
 	
 	@RequestMapping(value = "/attachments", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void uploadFile(@RequestPart(required = false) MultipartFile file, @RequestPart String meanfulName) throws Exception {
-		attachmentService.uploadFile(file, meanfulName);
+	public void uploadFile(@RequestPart(required = false) MultipartFile file, @RequestPart Attachment attachment) throws Exception {
+		attachmentService.uploadFile(file, attachment);
 	}
 
 	@RequestMapping(value = "/attachments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,0 +1,10 @@
+spring:
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017/test
+    datasource:
+        driverClassName: mongodb.jdbc.MongoDriver
+    http:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
