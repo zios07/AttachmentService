@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class AttachmentVO {
 	
+	private String id;
 	
 	private String name;
 	
@@ -14,11 +15,21 @@ public class AttachmentVO {
 	private String meaningfulName;
 
 	
-	public AttachmentVO(String name, Date uploadDate, double size, String meaningfulName) {
+	public AttachmentVO(String id, String name, Date uploadDate, double size, String meaningfulName) {
+		this.id = id;
 		this.name = name;
 		this.uploadDate = uploadDate;
 		this.size = size;
 		this.meaningfulName = meaningfulName;
+	}
+
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getName() {
