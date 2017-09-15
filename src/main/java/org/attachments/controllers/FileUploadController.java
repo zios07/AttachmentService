@@ -11,6 +11,7 @@ import org.attachments.vos.AttachmentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -33,9 +34,14 @@ public class FileUploadController {
 		return attachmentService.getAttachments();
 	}
 
-	@RequestMapping(value = "/attachments/{id}", method = RequestMethod.GET)
-	public void deleteAttachment(@PathVariable String id) {
+	@RequestMapping(value = "/attachments", method = RequestMethod.POST)
+	public void deleteAttachment(@RequestBody String id) {
 		attachmentService.deleteAttachment(id);
+	}
+	
+	@RequestMapping(value = "/attachments/{id}", method = RequestMethod.GET)
+	public AttachmentVO getAttachmentById(@PathVariable String id) {
+		return attachmentService.getAttachmentById(id);
 	}
 
 	@RequestMapping(value = "/download/{filename:.+}", method = RequestMethod.GET)

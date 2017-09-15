@@ -74,5 +74,9 @@ public class AttachmentService {
 		}
 
 	}
+
+	public AttachmentVO getAttachmentById(String id) {
+		return entityToVo(repo.findOne(id));
+	}
 	
 }
