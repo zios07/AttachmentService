@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@RequestMapping(value="/api/v1")
 public class FileUploadController {
 
 	@Autowired
@@ -26,10 +27,10 @@ public class FileUploadController {
 	
 	@RequestMapping(value = "/attachments", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void uploadFile(@RequestPart(required = false) MultipartFile file, @RequestPart Attachment attachment) throws Exception {
-		attachmentService.uploadFile(file, attachment);
+		attachmentService.uploadFile(file, attachment); 
 	}
 
-	@RequestMapping(value = "/attachments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/attachments")
 	public List<AttachmentVO> getAttachments() {
 		return attachmentService.getAttachments();
 	}
@@ -39,14 +40,14 @@ public class FileUploadController {
 		attachmentService.deleteAttachment(id);
 	}
 	
-	@RequestMapping(value = "/attachments/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/attachments/{id}")
 	public AttachmentVO getAttachmentById(@PathVariable String id) {
 		return attachmentService.getAttachmentById(id);
 	}
 
-	@RequestMapping(value = "/download/{filename:.+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/download/{filename:.+}")
 	public void downloadAttachment(@PathVariable String filename, HttpServletResponse response) throws IOException {
 		attachmentService.downloadAttachment(filename, response);
 	}
-
+	
 }

@@ -7,14 +7,15 @@ public class AttachmentConverter {
 	
 
 	public static AttachmentVO entityToVo(Attachment attachment) {
-		return new AttachmentVO(attachment.getId(), attachment.getName(), attachment.getUploadDate(), attachment.getSize(),
-				attachment.getMeaningfulName());
+		if(attachment != null) {
+			return new AttachmentVO(attachment.getId(), attachment.getName(), attachment.getUploadDate(), attachment.getSize(),
+					attachment.getMeaningfulName());
+		}
+		return null;
 	}
 	
 	public static Attachment voToEntity(AttachmentVO vo) {
 		return null;
 	}
 	
-	
-
 }
