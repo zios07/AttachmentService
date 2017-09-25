@@ -24,7 +24,12 @@ public class FileUploadController {
 
 	@Autowired
 	AttachmentService attachmentService;
-	
+
+	@RequestMapping(value = "/hi", method = RequestMethod.GET)
+	public String sayHi() {
+		return "Hello you !";
+	}
+
 	@RequestMapping(value = "/attachments", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void uploadFile(@RequestPart(required = false) MultipartFile file, @RequestPart Attachment attachment) throws Exception {
 		attachmentService.uploadFile(file, attachment); 
