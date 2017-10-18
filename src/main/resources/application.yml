@@ -6,10 +6,14 @@ spring:
     driverClassName: mongodb.jdbc.MongoDriver
   http:
     multipart:
-      max-file-size: 170MB
-      max-request-size: 170MB
+      max-file-size: 17MB
+      max-request-size: 17MB
       
 server:
   port: 8080
 
-    
+eureka:
+  client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

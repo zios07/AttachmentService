@@ -2,14 +2,22 @@ package ma.co.omnidata.framework.attachment.services.impl;
 
 import static ma.co.omnidata.framework.services.attachment.domain.converter.AttachmentConverter.entitiesToDtos;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ma.co.omnidata.framework.attachment.repositories.AttachmentRepository;
 import ma.co.omnidata.framework.attachment.services.IAttachmentService;
+import ma.co.omnidata.framework.attachment.services.exceptions.NotFoundException;
+import ma.co.omnidata.framework.attachment.utils.ErrorCodeConstants;
 import ma.co.omnidata.framework.services.attachment.domain.Attachment;
 import ma.co.omnidata.framework.services.attachment.domain.dto.AttachmentDto;
 
@@ -19,62 +27,55 @@ public class AttachmentService implements IAttachmentService {
 	@Autowired
 	AttachmentRepository repo;
 
-	public List<AttachmentDto> getAttachments(Long attachableId, String className, String appName) {
+	@Override
+	public List<AttachmentDto> getAttachments(Long attachableId, String className, String appName) throws Exception {
 		return entitiesToDtos(repo.findByEntityIdAndClassNameAndAppName(attachableId, className, appName));
 	}
 
-	public void uploadFile(MultipartFile file, Long attachableId, String className, String appName) throws Exception {
+	@Override
+	public ResponseEntity<String> uploadFile(MultipartFile file, Long attachableId, String className, String appName, String name) throws IOException
+			 {
 
 		if (file != null) {
-
-			// Retrieving file extension and file name
 			String fullFileName = file.getOriginalFilename();
 			String fileExtension = fullFileName.substring(fullFileName.lastIndexOf(".") + 1);
 			String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));
 
-			Attachment attachment = new Attachment();
-
-			attachment.setName("");
-			attachment.setMime(file.getContentType());
-			attachment.setAppName(appName);
-			attachment.setClassName(className);
-			attachment.setEntityId(attachableId);
-			attachment.setFileContent(file.getBytes());
-			attachment.setFileName(fileName);
-			attachment.setFileExtension(fileExtension);
-			attachment.setSize(file.getSize());
-
+			Attachment attachment = new Attachment(name, file.getContentType(), file.getSize(), fileExtension, fileName,
+					attachableId, className, file.getBytes(), appName);
 			repo.save(attachment);
+			return new ResponseEntity<String>("Attachment uploaded successfully", HttpStatus.OK);
 		}
-
+		return new ResponseEntity<String>("Attachment file cannot be empty", HttpStatus.BAD_REQUEST);
 	}
 
-	public byte[] getAttachmentContentById(String id) {
+	@Override
+	public ResponseEntity<byte[]> getAttachment(String id) throws NotFoundException, DataAccessResourceFailureException {
 		Attachment attachment = repo.findOne(id);
-		if (attachment != null) {
-			return attachment.getFileContent();
+		if (attachment == null) {
+			throw new NotFoundException(ErrorCodeConstants.ATTACHMENT_NOT_FOUND, "Attachment not found");
 		}
-		return null;
+		byte[] file = attachment.getFileContent();
+		String mimeType = attachment.getMime();
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.valueOf(mimeType));
+
+		String disposition = "attachment";
+
+//		 If the attachment is a PDF document, it will open it in the browser
+		if ("application/pdf".equalsIgnoreCase(mimeType)) {
+			disposition = "inline";
+		}
+		headers.add("content-disposition",
+				disposition + "; filename=\"" + attachment.getFileName() + "." + attachment.getFileExtension()+"\"");
+		return new ResponseEntity<byte[]>(file, headers, HttpStatus.OK);
 	}
 
-	// public void downloadAttachment(String filename, HttpServletResponse response)
-	// throws IOException {
-
-	// try {
-	// Attachment attachment = repo.findByName(filename);
-	//
-	// if (attachment != null) {
-	// InputStream input = new ByteArrayInputStream(attachment.getFile());
-	//
-	// IOUtils.copy(input, response.getOutputStream());
-	// response.flushBuffer();
-	// } else {
-	// System.out.println("Attachment is null !!");
-	// }
-	// } catch (Exception ex) {
-	// ex.printStackTrace();
-	// }
-
-	// }
+	@Override
+	public ResponseEntity<String> deleteAttachment(String id) {
+		repo.delete(id);
+		return new ResponseEntity<String>("Attachment deleted", HttpStatus.OK);
+	}
 
 }
